@@ -14,7 +14,7 @@ class Queue implements QueueInterface
     protected $channel;
 
     private $conf = [
-        'host' => '192.168.1.114',
+        'host' => 'localhost',
         'port' => 5672,
         'user' => 'guest',
         'password' => 'guest',
