@@ -10,10 +10,19 @@ use wsy\QueueInterface;
 class Queue implements QueueInterface
 {
 
+    /**
+     * @var
+     */
     protected $connection;
+    /**
+     * @var
+     */
     protected $channel;
 
-    private $conf = [
+    /**
+     * @var array
+     */
+    private $config = [
         'host' => 'localhost',
         'port' => 5672,
         'user' => 'guest',
@@ -23,12 +32,24 @@ class Queue implements QueueInterface
         'vhost' => '/'
     ];
 
+    /**
+     * Queue constructor.
+     * @param array $config
+     */
+    public function __construct($config = [])
+    {
+        $this->config = array_merge($this->config, $config);
+    }
+
+    /**
+     * @return mixed|void
+     */
     public function open()
     {
         if ($this->channel) {
             return;
         }
-        $conf = $this->conf;
+        $conf = $this->config;
         $this->connection = new AMQPStreamConnection(
             $conf['host'],
             $conf['port'],
@@ -54,9 +75,14 @@ class Queue implements QueueInterface
         $this->channel->queue_bind($conf['queueName'], $conf['exchangeName']);
     }
 
-    public function push($message, $ttr)
+    /**
+     * @param $message
+     * @param $ttr
+     * @return mixed|string
+     */
+    public function pushMessage($message, $ttr)
     {
-        $conf = $this->conf;
+        $conf = $this->config;
         $this->open();
         $id = uniqid('', true);
         $this->channel->basic_publish(
@@ -69,9 +95,12 @@ class Queue implements QueueInterface
         return $id;
     }
 
+    /**
+     * @return mixed|void
+     */
     public function listen()
     {
-        $conf = $this->conf;
+        $conf = $this->config;
         $this->open();
         $callback = function (AMQPMessage $payload) use (&$conf) {
             $id = $payload->get('message_id');
@@ -92,6 +121,9 @@ class Queue implements QueueInterface
         }
     }
 
+    /**
+     * @return mixed|void
+     */
     public function close()
     {
         if (!$this->channel) {
@@ -99,6 +131,13 @@ class Queue implements QueueInterface
         }
         $this->channel->close();
         $this->connection->close();
+    }
+
+    /**
+     * 关闭连接
+     */
+    public function __destruct(){
+        $this->close();
     }
 
 }
