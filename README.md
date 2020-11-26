@@ -9,3 +9,6 @@
     "wsy/php-queue": "dev-main"
   }
 ~~~
+
+生成token
+https://github.com/settings/tokens
