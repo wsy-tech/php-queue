@@ -20,13 +20,15 @@ class Queue
      */
     public function __construct(Conf $conf = null)
     {
-
         if (is_null(self::$connector)) {
             if (!is_null($conf->class)) {
-                self::$connector = new $conf->class($conf->config);
+                if(!($conf->class instanceof QueueInterface)){
+                    throw new Exception('conf class must be instance of QueueInterface.');
+                }else{
+                    self::$connector = new $conf->class($conf->config);
+                }
             } else {
                 self::$connector = new \wsy\amqp\Queue();
-
             }
         }
     }
