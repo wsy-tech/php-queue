@@ -2,11 +2,11 @@
   "repositories": [
     {
       "type": "vcs",
-      "url": "https://github.com/wsy-tech/php-queue.git"
+      "url": "https://github.com/wsy-tech/php-rabbitmq.git"
     }
   ],
   "require": {
-    "wsy/php-queue": "dev-main"
+    "wsy/php-rabbitmq": "dev-main"
   }
 ~~~
 
