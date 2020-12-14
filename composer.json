@@ -1,6 +1,6 @@
 {
-    "name": "wsy/php-queue",
-    "description": "wsy/php-queue",
+    "name": "wsy/php-rabbitmq",
+    "description": "wsy/php-rabbitmq",
     "authors": [
         {
             "name": "qmister",
