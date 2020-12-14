@@ -3,6 +3,8 @@
 
 namespace wsy;
 
+use wsy\amqp\Queue as amqp;
+
 use Exception;
 
 class Queue
@@ -18,18 +20,10 @@ class Queue
      * Queue constructor.
      * @param Conf|null $conf
      */
-    public function __construct(Conf $conf = null)
+    public function __construct($conf = [])
     {
         if (is_null(self::$connector)) {
-            if (!is_null($conf->class)) {
-                if(!($conf->class instanceof QueueInterface)){
-                    throw new Exception('conf class must be instance of QueueInterface.');
-                }else{
-                    self::$connector = new $conf->class($conf->config);
-                }
-            } else {
-                self::$connector = new \wsy\amqp\Queue();
-            }
+            self::$connector = new amqp($conf);
         }
     }
 
