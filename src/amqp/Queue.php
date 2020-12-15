@@ -111,8 +111,9 @@ class Queue implements QueueInterface
                 'job' => $job,
                 'ttr' => $ttr
             ]);
-            call_user_func([$event->job, 'execute'], $conf['queueName']);
-            $payload->delivery_info['channel']->basic_ack($payload->delivery_info['delivery_tag']);
+            if(call_user_func([$event->job, 'execute'], $conf['queueName'])){
+                $payload->delivery_info['channel']->basic_ack($payload->delivery_info['delivery_tag']);
+            } 
         };
         $this->channel->basic_qos(null, 1, null);
         $this->channel->basic_consume($conf['queueName'], '', false, false, false, false, $callback);
